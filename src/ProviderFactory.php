@@ -55,7 +55,6 @@ class ProviderFactory
         try {
             self::$provider = app()->make($providerClass, [
                 'config' => $providerConfig,
-                'isTest' => !empty($params['isTest'])
             ]);
         } catch (\Throwable) {
             throw new ProviderParamsException("Cant make instance");

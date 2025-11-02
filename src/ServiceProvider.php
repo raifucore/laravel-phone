@@ -13,9 +13,18 @@ class ServiceProvider extends CoreServiceProvider
 
     public function boot(): void
     {
+        $this->registerCommands();
+
         $this->publishes([__DIR__ . '/../config/phone.php' => config_path('phone.php')], 'config');
 
         $this->_loadLang();
+    }
+
+    private function registerCommands(): void
+    {
+        $this->commands([
+            \RaifuCore\Phone\Console\ValidateCommand::class,
+        ]);
     }
 
     private function _loadLang(): void

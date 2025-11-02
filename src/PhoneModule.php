@@ -3,15 +3,15 @@
 namespace RaifuCore\Phone;
 
 use RaifuCore\Phone\Actions\GetAllAction;
-use RaifuCore\Phone\Actions\GetDtoBySource;
+use RaifuCore\Phone\Actions\GetDtoByPhone;
 use RaifuCore\Phone\Dto\PhoneDto;
 use Illuminate\Support\Collection;
 
 class PhoneModule
 {
-    public static function getDtoBySource(string $source): PhoneDto
+    public static function getDtoByPhone(string $phone): PhoneDto|null
     {
-        return (new GetDtoBySource($source))->execute();
+        return (new GetDtoByPhone($phone))->execute();
     }
 
     public static function getAll(): Collection

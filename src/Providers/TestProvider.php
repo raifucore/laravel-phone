@@ -2,6 +2,7 @@
 
 namespace RaifuCore\Phone\Providers;
 
+use Illuminate\Support\Str;
 use RaifuCore\Phone\Interfaces\ProviderInterface;
 use RaifuCore\Phone\Requests\Provider\CheckOutgoingCallRequestDto;
 use RaifuCore\Phone\Requests\Provider\SendCodeByCallRequestDto;
@@ -11,17 +12,17 @@ use RaifuCore\Phone\Responses\Provider\CheckOutgoingCallResponseDto;
 use RaifuCore\Phone\Responses\Provider\SendCodeByCallResponseDto;
 use RaifuCore\Phone\Responses\Provider\SendOutgoingCallResponseDto;
 use RaifuCore\Phone\Responses\Provider\SendSmsResponseDto;
-use Illuminate\Support\Str;
 
 class TestProvider implements ProviderInterface
 {
     private string $provider = 'test';
+    private string $code;
+    private string $number;
 
-    public function __construct(array $config) {}
-
-    private function _code(): string
+    public function __construct(array $config)
     {
-        return config('phone.test_data.code') ?? '7777';
+        $this->code = $config['code'] ?? '7777';
+        $this->number = $config['number'] ?? '78009997777';
     }
 
     public function getBalance(): float
@@ -34,7 +35,7 @@ class TestProvider implements ProviderInterface
         $response = new SendSmsResponseDto;
 
         $response
-            ->setCode($this->_code())
+            ->setCode($this->code)
             ->setProvider($this->provider)
             ->setRequestId(Str::uuid()->toString())
             ->setStatus(true);
@@ -61,7 +62,7 @@ class TestProvider implements ProviderInterface
         $response
             ->setProvider($this->provider)
             ->setRequestId(Str::uuid()->toString())
-            ->setPhoneNumber(config('phone.test_data.number'))
+            ->setPhoneNumber($this->number)
             ->setStatus(true);
 
         return $response;

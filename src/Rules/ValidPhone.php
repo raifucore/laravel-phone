@@ -2,9 +2,9 @@
 
 namespace RaifuCore\Phone\Rules;
 
-use RaifuCore\Phone\PhoneModule;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use RaifuCore\Phone\PhoneModule;
 
 class ValidPhone implements ValidationRule
 {
@@ -12,8 +12,7 @@ class ValidPhone implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $phoneDto = PhoneModule::getDtoBySource($this->phone);
-        if (!$phoneDto->isValid()) {
+        if (!PhoneModule::getDtoByPhone($this->phone)) {
             $fail(__('raifucore::phone.phoneNumber'));
         }
     }
