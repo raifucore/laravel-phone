@@ -46,12 +46,17 @@ class SmsruProvider implements ProviderInterface
                 'json' => '1'
             ]);
 
-        $array = $client->json();
-        if (!isset($array['balance'])) {
-            throw new ProviderRequestException('В ответе отсутствуют balance');
+        $aResponse = $client->json();
+
+        if (empty($aResponse['status']) || $aResponse['status'] !== 'OK') {
+            throw new ProviderRequestException($aResponse['status_text'] ?? 'Provider error');
         }
 
-        return floatval($array['balance']);
+        if (!isset($aResponse['balance'])) {
+            throw new ProviderRequestException('There is no `balance` in the response');
+        }
+
+        return floatval($aResponse['balance']);
     }
 
     public function sendSMS(SendSmsRequestDto $dto): SendSmsResponseDto
