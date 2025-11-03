@@ -23,6 +23,7 @@ class ServiceProvider extends CoreServiceProvider
     private function registerCommands(): void
     {
         $this->commands([
+            \RaifuCore\Phone\Console\BalanceCommand::class,
             \RaifuCore\Phone\Console\ValidateCommand::class,
         ]);
     }
@@ -32,11 +33,11 @@ class ServiceProvider extends CoreServiceProvider
         $langPath = __DIR__ . '/../resources/lang';
 
         // Load
-        $this->loadTranslationsFrom($langPath, 'raifucore');
+        $this->loadTranslationsFrom($langPath, 'raifucore_phone');
 
         // Publish
         $this->publishes([
-            $langPath => resource_path('lang/vendor/raifucore'),
+            $langPath => resource_path('lang/vendor/raifucore_phone'),
         ], 'lang');
     }
 }

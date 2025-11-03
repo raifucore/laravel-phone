@@ -6,9 +6,20 @@ use RaifuCore\Phone\Actions\GetAllAction;
 use RaifuCore\Phone\Actions\GetDtoByPhone;
 use RaifuCore\Phone\Dto\PhoneDto;
 use Illuminate\Support\Collection;
+use RaifuCore\Phone\Enums\ProviderLabelEnum;
+use RaifuCore\Phone\Exceptions\ProviderParamsException;
+use RaifuCore\Phone\Providers\Factory;
 
 class PhoneModule
 {
+    /**
+     * @throws ProviderParamsException
+     */
+    public static function getProvider(ProviderLabelEnum $label = null): Interfaces\ProviderInterface
+    {
+        return (new Factory($label))->init();
+    }
+
     public static function getDtoByPhone(string $phone): PhoneDto|null
     {
         return (new GetDtoByPhone($phone))->execute();

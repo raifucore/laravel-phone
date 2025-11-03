@@ -6,14 +6,12 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use RaifuCore\Phone\PhoneModule;
 
-class ValidPhone implements ValidationRule
+class Phone implements ValidationRule
 {
-    public function __construct(protected string|null $phone) {}
-
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!PhoneModule::getDtoByPhone($this->phone)) {
-            $fail(__('raifucore::phone.phoneNumber'));
+        if (!PhoneModule::getDtoByPhone($value)) {
+            $fail(__('raifucore_phone::validation.phoneNumber'));
         }
     }
 }

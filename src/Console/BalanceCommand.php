@@ -5,17 +5,17 @@ namespace RaifuCore\Phone\Console;
 use Illuminate\Console\Command;
 use RaifuCore\Phone\PhoneModule;
 
-class ValidateCommand extends Command
+class BalanceCommand extends Command
 {
-    protected $signature = 'phone:validate {phone}';
+    protected $signature = 'phone:balance {--provider}';
 
-    protected $description = 'Validate phone. Provide phone';
+    protected $description = 'Show provider\'s balance. Provide phone';
 
     public function handle(): int
     {
         // Detect phone
-        $phone = preg_replace('[\D]', '', $this->argument('phone'));
-        if (!$phone) {
+        $provider = $this->option('provider');
+        if (!$provider) {
             $this->error('Phone number is empty');
             return Command::INVALID;
         }

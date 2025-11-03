@@ -1,28 +1,30 @@
 <?php
 
+use RaifuCore\Phone\Enums\ProviderLabelEnum;
+
 return [
     'provider' => env('PHONE_SMS_PROVIDER'),
     'providers' => [
-        'test' => [
+        ProviderLabelEnum::TEST->value => [
             'class' => \RaifuCore\Phone\Providers\TestProvider::class,
             'config' => [
                 'code' => '7777',
                 'number' => '78009997777'
             ]
         ],
-        'smsru' => [
+        ProviderLabelEnum::SMSRU->value => [
             'class' => \RaifuCore\Phone\Providers\SmsruProvider::class,
             'config' => [
                 'apikey' => env('PHONE_SMS_PROVIDER_SMSRU_APIKEY'),
-                'sender' => null,
+                'sender' => env('PHONE_SMS_PROVIDER_SMSRU_SENDER'),
             ]
         ],
-        'greensms' => [
+        ProviderLabelEnum::GREENSMS->value => [
             'class' => \RaifuCore\Phone\Providers\GreensmsProvider::class,
             'config' => [
                 'login' => env('PHONE_SMS_PROVIDER_GREENSMS_LOGIN'),
                 'password' => env('PHONE_SMS_PROVIDER_GREENSMS_PASSWORD'),
-                'sender' => null,
+                'sender' => env('PHONE_SMS_PROVIDER_GREENSMS_SENDER'),
             ]
         ]
     ],
