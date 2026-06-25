@@ -8,6 +8,7 @@ use RaifuCore\Phone\Dto\PhoneDto;
 use Illuminate\Support\Collection;
 use RaifuCore\Phone\Enums\ProviderLabelEnum;
 use RaifuCore\Phone\Exceptions\ProviderParamsException;
+use RaifuCore\Phone\Models\PhoneFormat;
 use RaifuCore\Phone\Providers\Factory;
 
 class PhoneModule
@@ -30,28 +31,59 @@ class PhoneModule
         return (new GetAllAction())->execute();
     }
 
-    public static function sorted(array $priorityCountries = null): Collection
+    public static function filter(Collection $collection, array|null $countries = null): Collection
     {
-        $collection = self::getAll();
+        $countries = collect($countries ?? [])
+            ->map(static fn (string $countryIso): string => mb_strtolower($countryIso))
+            ->values()
+            ->all();
 
-        // step 1: отсортировать по country_iso -> Россия, Казахстан, Кыргызстан
-        // step 2: остальные отсортировать по алфавиту, поле country
+        if (empty($countries)) {
+            return collect();
+        }
 
-        return $collection->sortBy(function ($phoneFormat) {
-            $countryIso = $phoneFormat->country_iso;
+        return $collection
+            ->filter(static fn (PhoneFormat $phoneFormat): bool => in_array(
+                mb_strtolower($phoneFormat->country_iso),
+                $countries,
+                true
+            ))->values();
+    }
 
-            // Приоритетные страны идут первыми
-            $priorityCountries = ['ru', 'kz', 'kg'];
-            $priorityIndex = array_search($countryIso, $priorityCountries);
+    public static function sort(Collection $collection, array|null $countries = null): Collection
+    {
+        $priorityCountries = collect($countries ?? [])
+            ->map(static fn (string $countryIso): string => mb_strtolower($countryIso))
+            ->values()
+            ->all();
 
-            if ($priorityIndex !== false) {
-                // Возвращаем индекс приоритета (0, 1, 2)
-                return str_pad($priorityIndex, 4, '0', STR_PAD_LEFT);
-            }
+        $priorityMap = array_flip($priorityCountries);
 
-            // Остальные страны сортируются по алфавиту по полю country
-            // Для кириллических символов используем правильную сортировку
-            return 1000 . $phoneFormat->country;
-        });
+        return $collection
+            ->sort(static function (PhoneFormat $a, PhoneFormat $b) use ($priorityMap): int {
+                $aIso = mb_strtolower($a->country_iso);
+                $bIso = mb_strtolower($b->country_iso);
+
+                $aPriority = $priorityMap[$aIso] ?? null;
+                $bPriority = $priorityMap[$bIso] ?? null;
+
+                if ($aPriority !== null && $bPriority !== null) {
+                    return $aPriority <=> $bPriority;
+                }
+
+                if ($aPriority !== null) {
+                    return -1;
+                }
+
+                if ($bPriority !== null) {
+                    return 1;
+                }
+
+                $aCountry = mb_strtolower($a->country);
+                $bCountry = mb_strtolower($b->country);
+
+                return strcmp($aCountry, $bCountry);
+            })
+            ->values();
     }
 }

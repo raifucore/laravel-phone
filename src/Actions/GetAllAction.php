@@ -18,7 +18,7 @@ class GetAllAction
             $new->code = $template['code'] ?? null;
             $new->mask = $template['mask'] ?? null;
             $new->regex = $template['regex'] ?? null;
-            $new->country = __("countries.$countryIso");
+            $new->country = __("raifucore_phone::countries.$countryIso");
 
             $list->add($new);
         }
