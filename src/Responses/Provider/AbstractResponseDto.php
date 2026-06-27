@@ -5,9 +5,9 @@ namespace RaifuCore\Phone\Responses\Provider;
 class AbstractResponseDto
 {
     protected bool $status = false;
-    protected string|null $provider = null;
-    protected string|null $requestId = null;
-	protected string|null $error = null;
+    protected ?string $provider = null;
+    protected ?string $requestId = null;
+	protected ?string $error = null;
 
     public function isSuccess(): bool
     {
@@ -56,7 +56,6 @@ class AbstractResponseDto
     public function toArray(): array
     {
         return array_filter([
-            //'status' => $this->status,
             'provider' => $this->provider,
             'requestId' => $this->requestId,
             'error' => $this->error,

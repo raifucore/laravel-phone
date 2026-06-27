@@ -11,7 +11,7 @@ class Factory
     private ProviderLabelEnum $label;
     private static array $providers = [];
 
-    public function __construct(ProviderLabelEnum|null $label = null)
+    public function __construct(?ProviderLabelEnum $label = null)
     {
         $this->label = $label
             ?? ProviderLabelEnum::tryFrom(config('phone.provider'))

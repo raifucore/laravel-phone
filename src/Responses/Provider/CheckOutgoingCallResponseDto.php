@@ -4,7 +4,7 @@ namespace RaifuCore\Phone\Responses\Provider;
 
 class CheckOutgoingCallResponseDto extends AbstractResponseDto
 {
-    protected string|null $code = null;
+    protected ?string $code = null;
 
     public function getCode(): ?string
     {

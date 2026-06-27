@@ -21,8 +21,8 @@ use Illuminate\Support\Str;
 class GreensmsProvider implements ProviderInterface
 {
     private string $provider = 'greensms';
-    private string|null $login;
-    private string|null $password;
+    private ?string $login;
+    private ?string $password;
 
     public function __construct(array $config)
     {

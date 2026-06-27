@@ -4,11 +4,11 @@ namespace RaifuCore\Phone\Dto;
 
 class TemplateDto
 {
-    protected int|null $code = null;
-    protected int|null $length = null;
-    protected int|null $length_max = null;
-    protected string|null $regex = null;
-    protected string|null $mask = null;
+    protected ?int $code = null;
+    protected ?int $length = null;
+    protected ?int $length_max = null;
+    protected ?string $regex = null;
+    protected ?string $mask = null;
 
     public function __construct(protected string $countryIso) {}
 

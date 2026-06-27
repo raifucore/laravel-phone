@@ -89,85 +89,85 @@ class Response
         return $this->logId;
     }
 
-    public function setStatus(bool $status): Response
+    public function setStatus(bool $status): self
     {
         $this->status = $status;
         return $this;
     }
 
-    public function setIsTest(bool $isTest): Response
+    public function setIsTest(bool $isTest): self
     {
         $this->isTest = $isTest;
         return $this;
     }
 
-    public function setProvider(string $provider): Response
+    public function setProvider(string $provider): self
     {
         $this->provider = $provider;
         return $this;
     }
 
-    public function setMethod(string $method): Response
+    public function setMethod(string $method): self
     {
         $this->method = $method;
         return $this;
     }
 
-    public function setCode(string $code): Response
+    public function setCode(string $code): self
     {
         $this->code = $code;
         return $this;
     }
 
-    public function setPhone(string $phone): Response
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
         return $this;
     }
 
-    public function setNumber(string $number): Response
+    public function setNumber(string $number): self
     {
         $this->number = $number;
         return $this;
     }
 
-    public function setCost(float $cost): Response
+    public function setCost(float $cost): self
     {
         $this->cost = $cost;
         return $this;
     }
 
-    public function setBalance(float $balance): Response
+    public function setBalance(float $balance): self
     {
         $this->balance = $balance;
         return $this;
     }
 
-    public function setRequestId(string $requestId): Response
+    public function setRequestId(string $requestId): self
     {
         $this->requestId = $requestId;
         return $this;
     }
 
-    public function setMessage(string $message): Response
+    public function setMessage(string $message): self
     {
         $this->message = $message;
         return $this;
     }
 
-    public function setError(string $error): Response
+    public function setError(string $error): self
     {
         $this->error = $error;
         return $this;
     }
 
-    public function setLog(string $log): Response
+    public function setLog(string $log): self
     {
         $this->log = $log;
         return $this;
     }
 
-    public function setLogId(int $logId): Response
+    public function setLogId(int $logId): self
     {
         $this->logId = $logId;
         return $this;

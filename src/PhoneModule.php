@@ -2,6 +2,7 @@
 
 namespace RaifuCore\Phone;
 
+use RaifuCore\Phone\Actions\FindTemplateByPhone;
 use RaifuCore\Phone\Actions\GetAllAction;
 use RaifuCore\Phone\Actions\GetDtoByPhone;
 use RaifuCore\Phone\Dto\PhoneDto;
@@ -16,7 +17,7 @@ class PhoneModule
     /**
      * @throws ProviderParamsException
      */
-    public static function getProvider(ProviderLabelEnum $label = null): Interfaces\ProviderInterface
+    public static function getProvider(?ProviderLabelEnum $label = null): Interfaces\ProviderInterface
     {
         return (new Factory($label))->init();
     }
@@ -31,7 +32,49 @@ class PhoneModule
         return (new GetAllAction())->execute();
     }
 
-    public static function filter(Collection $collection, array|null $countries = null): Collection
+    public static function format(?string $phone): ?string
+    {
+        $phone = is_string($phone) ? preg_replace('[\D]', '', $phone) : '';
+        if (!$phone) {
+            return null;
+        }
+
+        $phoneTemplate = (new FindTemplateByPhone($phone))->execute();
+        if (!$phoneTemplate) {
+            return $phone;
+        }
+
+        $code = (string)$phoneTemplate->getCode();
+        if ($code === '') {
+            return $phone;
+        }
+
+        $body = substr($phone, strlen($code));
+        $mask = (string)$phoneTemplate->getMask();
+        if ($mask === '') {
+            return '+' . $code . $body;
+        }
+
+        $bodyPosition = 0;
+        $formattedBody = preg_replace_callback('/_/', static function () use (&$bodyPosition, $body): string {
+            return $body[$bodyPosition++] ?? '';
+        }, $mask);
+
+        if ($formattedBody === null) {
+            return '+' . $phone;
+        }
+
+        if ($bodyPosition < strlen($body)) {
+            $formattedBody .= substr($body, $bodyPosition);
+        }
+
+        $formattedBody = trim($formattedBody);
+        return $formattedBody !== ''
+            ? '+' . $code . ' ' . $formattedBody
+            : '+' . $code;
+    }
+
+    public static function filter(Collection $collection, ?array $countries = null): Collection
     {
         $countries = collect($countries ?? [])
             ->map(static fn (string $countryIso): string => mb_strtolower($countryIso))
@@ -50,7 +93,7 @@ class PhoneModule
             ))->values();
     }
 
-    public static function sort(Collection $collection, array|null $countries = null): Collection
+    public static function sort(Collection $collection, ?array $countries = null): Collection
     {
         $priorityCountries = collect($countries ?? [])
             ->map(static fn (string $countryIso): string => mb_strtolower($countryIso))
